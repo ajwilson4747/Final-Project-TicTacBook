@@ -1,0 +1,201 @@
+<html>
+<head>
+<title>LibraryHunt.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6897bb;}
+.s3 { color: #808080;}
+.s4 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+LibraryHunt.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.example.tictactoe</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.annotation.SuppressLint</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.Context</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.res.TypedArray</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.Bitmap</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.BitmapFactory</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.Canvas</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.Color</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.Paint</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Build</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.util.AttributeSet</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.MotionEvent</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.View</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Button</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.TextView</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">androidx.annotation.Nullable</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.annotation.RequiresApi</span><span class="s0">;</span>
+
+<span class="s0">public class </span><span class="s1">LibraryHunt </span><span class="s0">extends </span><span class="s1">View {</span>
+
+    <span class="s0">private final int </span><span class="s1">boardColor</span><span class="s0">;</span>
+    <span class="s0">private final int </span><span class="s1">winningColor</span><span class="s0">;</span>
+    <span class="s0">private final int </span><span class="s1">playerOneColor</span><span class="s0">;</span>
+    <span class="s0">private final int </span><span class="s1">playerTwoColor</span><span class="s0">;</span>
+
+    <span class="s0">private boolean </span><span class="s1">winningLine =</span><span class="s0">false;</span>
+
+    <span class="s0">private final </span><span class="s1">Paint paint = </span><span class="s0">new </span><span class="s1">Paint()</span><span class="s0">;</span>
+
+    <span class="s0">private final </span><span class="s1">GameLogic game</span><span class="s0">;</span>
+
+    <span class="s0">private int </span><span class="s1">cellSize = getWidth() / </span><span class="s2">3</span><span class="s0">;</span>
+
+    <span class="s3">//THE CONSTRUCTOR SETS EVERYTHING UP AND CONNECTS THE VARIABLES</span>
+
+    <span class="s0">public </span><span class="s1">LibraryHunt(Context context</span><span class="s0">, </span><span class="s1">@Nullable AttributeSet attrs) {</span>
+        <span class="s0">super</span><span class="s1">(context</span><span class="s0">, </span><span class="s1">attrs)</span><span class="s0">;</span>
+
+        <span class="s1">game = </span><span class="s0">new </span><span class="s1">GameLogic()</span><span class="s0">;</span>
+
+        <span class="s1">TypedArray a = context.getTheme().obtainStyledAttributes(attrs</span><span class="s0">, </span><span class="s1">R.styleable.LibraryHunt</span><span class="s0">, </span><span class="s2">0</span><span class="s0">, </span><span class="s2">0</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">try </span><span class="s1">{</span>
+            <span class="s1">boardColor = a.getInt(R.styleable.LibraryHunt_boardColor</span><span class="s0">, </span><span class="s2">0</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">winningColor = a.getInt(R.styleable.LibraryHunt_winningColor</span><span class="s0">, </span><span class="s2">0</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">playerOneColor = a.getInt(R.styleable.LibraryHunt_playerOneColor</span><span class="s0">,</span><span class="s2">0</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">playerTwoColor = a.getInt(R.styleable.LibraryHunt_playerTwoColor</span><span class="s0">, </span><span class="s2">0</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">finally </span><span class="s1">{</span>
+            <span class="s1">a.recycle()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s3">//THIS CHANGES THE SIZE OF THE GAMEBOARD DEPENDING ON THE SCREEN OF THE PHONE</span>
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onMeasure(</span><span class="s0">int </span><span class="s1">widthMeasureSpec</span><span class="s0">, int </span><span class="s1">heightMeasureSpec) {</span>
+        <span class="s0">super</span><span class="s1">.onMeasure(widthMeasureSpec</span><span class="s0">, </span><span class="s1">heightMeasureSpec)</span><span class="s0">;</span>
+
+
+        <span class="s0">int </span><span class="s1">dimensions = Math.min(getMeasuredWidth()</span><span class="s0">, </span><span class="s1">getMeasuredHeight())</span><span class="s0">;</span>
+        <span class="s1">cellSize = dimensions / </span><span class="s2">3</span><span class="s0">;</span>
+        <span class="s1">setMeasuredDimension(dimensions</span><span class="s0">, </span><span class="s1">dimensions)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s3">//CONTINUALLY UPDATE THE CANVAS WITH CHANGES TO THE GAMEBOARD,PLAYER MARKINGS, ETC</span>
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onDraw(Canvas canvas) {</span>
+        <span class="s1">paint.setStyle(Paint.Style.STROKE)</span><span class="s0">;</span>
+        <span class="s1">paint.setAntiAlias(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">drawGameBoard(canvas)</span><span class="s0">;</span>
+        <span class="s1">drawMarkers(canvas)</span><span class="s0">;</span>
+
+        <span class="s3">//troubleshooting purposes</span>
+        <span class="s3">//drawPlayer1(canvas,2,1);</span>
+        <span class="s3">//drawPlayer2(canvas, 0,2);</span>
+
+    <span class="s1">}</span>
+
+    <span class="s3">//HANDLES WHEN THE PLAYERS TOUCH THE SCREEN TO MARK THE BOARD</span>
+    <span class="s1">@SuppressLint(</span><span class="s4">&quot;ClickableViewAccessibility&quot;</span><span class="s1">)</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public boolean </span><span class="s1">onTouchEvent(MotionEvent event) {</span>
+        <span class="s0">float </span><span class="s1">x = event.getX()</span><span class="s0">;</span>
+        <span class="s0">float </span><span class="s1">y = event.getY()</span><span class="s0">;</span>
+
+        <span class="s0">int </span><span class="s1">action = event.getAction()</span><span class="s0">;</span>
+
+        <span class="s0">if </span><span class="s1">(action == MotionEvent.ACTION_DOWN) {</span>
+            <span class="s0">int </span><span class="s1">row = (</span><span class="s0">int</span><span class="s1">) Math.ceil(y / cellSize)</span><span class="s0">;</span>
+            <span class="s0">int </span><span class="s1">col = (</span><span class="s0">int</span><span class="s1">) Math.ceil(x / cellSize)</span><span class="s0">;</span>
+
+            <span class="s0">if </span><span class="s1">(!winningLine)</span>
+                <span class="s0">if </span><span class="s1">(game.updateGameBoard(row</span><span class="s0">, </span><span class="s1">col))</span>
+                    <span class="s1">invalidate()</span><span class="s0">;</span>
+
+                <span class="s0">if</span><span class="s1">(game.winnerCheck())</span>
+                    <span class="s1">winningLine=</span><span class="s0">true;</span>
+                    <span class="s1">invalidate()</span><span class="s0">;</span>
+                <span class="s3">//update the players turn for each round</span>
+                <span class="s0">if </span><span class="s1">(game.getPlayer() % </span><span class="s2">2 </span><span class="s1">== </span><span class="s2">0</span><span class="s1">) {</span>
+                    <span class="s1">game.setPlayer(game.getPlayer()-</span><span class="s2">1</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                    <span class="s1">game.setPlayer(game.getPlayer() + </span><span class="s2">1</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">}</span>
+                <span class="s0">return true;</span>
+            <span class="s1">}</span>
+            <span class="s0">return false;</span>
+        <span class="s1">}</span>
+
+
+    <span class="s3">//THIS DRAWS THE ACTUAL GAME BOARD ONTO THE CANVAS</span>
+    <span class="s0">private void </span><span class="s1">drawGameBoard(Canvas canvas){</span>
+        <span class="s1">paint.setColor(boardColor)</span><span class="s0">;</span>
+        <span class="s1">paint.setStrokeWidth(</span><span class="s2">16</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">c=</span><span class="s2">1</span><span class="s0">; </span><span class="s1">c&lt;</span><span class="s2">3</span><span class="s0">; </span><span class="s1">c++){</span>
+            <span class="s1">canvas.drawLine(cellSize*c</span><span class="s0">,</span><span class="s2">0</span><span class="s0">,</span>
+                    <span class="s1">cellSize*c</span><span class="s0">, </span><span class="s1">canvas.getWidth()</span><span class="s0">, </span><span class="s1">paint)</span><span class="s0">;</span>
+
+            <span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">r=</span><span class="s2">1</span><span class="s0">; </span><span class="s1">r&lt;</span><span class="s2">3</span><span class="s0">; </span><span class="s1">r++){</span>
+                <span class="s1">canvas.drawLine(</span><span class="s2">0</span><span class="s0">,</span>
+                        <span class="s1">cellSize*r</span><span class="s0">,</span><span class="s1">canvas.getWidth()</span><span class="s0">, </span><span class="s1">cellSize*r</span><span class="s0">, </span><span class="s1">paint)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+
+    <span class="s3">//THIS ENABLES THE PLAYERS TO MARK THE GAMEBOARD</span>
+    <span class="s0">private void </span><span class="s1">drawMarkers(Canvas canvas){</span>
+        <span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">r=</span><span class="s2">0</span><span class="s0">; </span><span class="s1">r&lt;</span><span class="s2">3</span><span class="s0">; </span><span class="s1">r++){</span>
+            <span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">c=</span><span class="s2">0</span><span class="s0">; </span><span class="s1">c&lt;</span><span class="s2">3</span><span class="s0">; </span><span class="s1">c++){</span>
+                <span class="s0">if</span><span class="s1">(game.getGameBoard()[r][c] !=</span><span class="s2">0</span><span class="s1">){</span>
+                    <span class="s0">if</span><span class="s1">(game.getGameBoard()[r][c] ==</span><span class="s2">1</span><span class="s1">){</span>
+                        <span class="s1">drawPlayer1(canvas</span><span class="s0">,</span><span class="s1">r</span><span class="s0">,</span><span class="s1">c)</span><span class="s0">;</span>
+                    <span class="s1">}</span>
+                    <span class="s0">else</span><span class="s1">{</span>
+                        <span class="s1">drawPlayer2(canvas</span><span class="s0">,</span><span class="s1">r</span><span class="s0">,</span><span class="s1">c)</span><span class="s0">;</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s3">//TAKE IN THE NAMES OF THE PLAYERS AND SET THE VARIABLES SO IT CAN ACCESSIBLE TO THE GAME DISPLAY</span>
+    <span class="s0">public void </span><span class="s1">setUpGame(Button playAgain</span><span class="s0">, </span><span class="s1">Button home</span><span class="s0">, </span><span class="s1">TextView playerDisplay</span><span class="s0">, </span><span class="s1">String[] names){</span>
+        <span class="s1">game.setPlayAgain(playAgain)</span><span class="s0">;</span>
+        <span class="s1">game.setHome(home)</span><span class="s0">;</span>
+        <span class="s1">game.setPlayerDisplay(playerDisplay)</span><span class="s0">;</span>
+        <span class="s1">game.setNames(names)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s3">//RESET THE GAME BY ERASING EVERYTHING BUT THE GAMEBOARD AND SETTING INITIAL VARIABLES BACK TO A DEFAULT</span>
+    <span class="s0">public void </span><span class="s1">resetGame(){</span>
+        <span class="s1">game.resetGameBoard()</span><span class="s0">;</span>
+        <span class="s1">winningLine = </span><span class="s0">false;</span>
+    <span class="s1">}</span>
+
+    <span class="s3">//THIS IS FOR PLAYER ONE'S BOOK</span>
+    <span class="s0">private void </span><span class="s1">drawPlayer1(Canvas canvas</span><span class="s0">, int </span><span class="s1">row</span><span class="s0">, int </span><span class="s1">col){</span>
+        <span class="s1">paint.setColor(playerOneColor)</span><span class="s0">;</span>
+        <span class="s1">canvas.drawRect((</span><span class="s0">float</span><span class="s1">) ((col+</span><span class="s2">1</span><span class="s1">)*cellSize -cellSize*</span><span class="s2">0.5</span><span class="s1">)</span><span class="s0">,</span>
+                <span class="s1">(</span><span class="s0">float</span><span class="s1">) (row*cellSize + cellSize*</span><span class="s2">0.2</span><span class="s1">)</span><span class="s0">,</span>
+                <span class="s1">(</span><span class="s0">float</span><span class="s1">) (col*cellSize + cellSize*</span><span class="s2">0.5</span><span class="s1">)</span><span class="s0">,</span>
+        <span class="s1">(</span><span class="s0">float</span><span class="s1">) ((row+</span><span class="s2">1</span><span class="s1">)*cellSize - cellSize*</span><span class="s2">0.2</span><span class="s1">)</span><span class="s0">, </span><span class="s1">paint)</span><span class="s0">; </span><span class="s3">//the extra parameter at the end</span>
+                                                        <span class="s3">//of the line is to provide a margin</span>
+                                                        <span class="s3">//space from the walls</span>
+    <span class="s1">}</span>
+
+    <span class="s3">//THIS IS FOR PLAYER TWO'S BOOK</span>
+    <span class="s0">private void </span><span class="s1">drawPlayer2(Canvas canvas</span><span class="s0">, int </span><span class="s1">row</span><span class="s0">, int </span><span class="s1">col){</span>
+        <span class="s1">paint.setColor(playerTwoColor)</span><span class="s0">;</span>
+        <span class="s1">canvas.drawRect((</span><span class="s0">float</span><span class="s1">) ((col+</span><span class="s2">1</span><span class="s1">)*cellSize -cellSize*</span><span class="s2">0.5</span><span class="s1">)</span><span class="s0">,</span>
+                <span class="s1">(</span><span class="s0">float</span><span class="s1">) (row*cellSize + cellSize*</span><span class="s2">0.2</span><span class="s1">)</span><span class="s0">,</span>
+                <span class="s1">(</span><span class="s0">float</span><span class="s1">) (col*cellSize + cellSize*</span><span class="s2">0.5</span><span class="s1">)</span><span class="s0">,</span>
+                <span class="s1">(</span><span class="s0">float</span><span class="s1">) ((row+</span><span class="s2">1</span><span class="s1">)*cellSize - cellSize*</span><span class="s2">0.2</span><span class="s1">)</span><span class="s0">, </span><span class="s1">paint)</span><span class="s0">; </span><span class="s3">//the extra parameter at the end</span>
+        <span class="s3">//of the line is to provide a margin</span>
+        <span class="s3">//space from the walls</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

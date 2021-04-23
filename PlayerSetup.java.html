@@ -1,0 +1,52 @@
+<html>
+<head>
+<title>PlayerSetup.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+.s3 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+PlayerSetup.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.example.tictactoe</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">androidx.appcompat.app.AppCompatActivity</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.content.Intent</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.media.MediaPlayer</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Bundle</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.View</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.EditText</span><span class="s0">;</span>
+
+
+<span class="s0">public class </span><span class="s1">PlayerSetup </span><span class="s0">extends </span><span class="s1">AppCompatActivity {</span>
+    <span class="s0">private </span><span class="s1">EditText player1</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">EditText player2</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">MediaPlayer mySound</span><span class="s0">;</span>
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) {</span>
+        <span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s0">;</span>
+        <span class="s1">setContentView(R.layout.player_setup)</span><span class="s0">;</span>
+        <span class="s1">player1 = (EditText) findViewById(R.id.editTextTextPersonName)</span><span class="s0">;</span>
+        <span class="s1">player2 = (EditText) findViewById(R.id.editTextTextPersonName2)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s0">public void </span><span class="s1">submitButtonClick (View view){</span>
+
+        <span class="s2">//pass variables to the gameDisplay class through the passing of intent</span>
+        <span class="s1">String player1Name = player1.getText().toString()</span><span class="s0">;</span>
+        <span class="s1">String player2Name = player2.getText().toString()</span><span class="s0">;</span>
+        <span class="s1">Intent intent = </span><span class="s0">new </span><span class="s1">Intent(</span><span class="s0">this, </span><span class="s1">GameDisplay.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">intent.putExtra(</span><span class="s3">&quot;PLAYER_NAMES&quot;</span><span class="s0">, new </span><span class="s1">String[] {player1Name</span><span class="s0">, </span><span class="s1">player2Name})</span><span class="s0">;</span>
+        <span class="s1">startActivity(intent)</span><span class="s0">;</span>
+        <span class="s1">finish()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span></pre>
+</body>
+</html>
